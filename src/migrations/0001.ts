@@ -1,19 +1,19 @@
-import { clientPromise } from '~/lib/db/client';
+import { userPromise } from '~/lib/db/client';
 import { blue, red } from 'kleur/colors';
 
 (async () => {
-  const client = await clientPromise;
+  const client = await userPromise;
 
-  const profileCollection = client.db().collection('profile');
-  const usersCollection = client.db().collection('users');
+  const profileCollection = client.mongoClient(process.env.REALM_SERVICE_NAME).db(process.env.REALM_DB_NAME).collection('profile');
+  const usersCollection = client.mongoClient(process.env.REALM_SERVICE_NAME).db(process.env.REALM_DB_NAME).collection('users');
 
   const deleteRes = await profileCollection.deleteMany({});
   console.log(red(`Deleted ${deleteRes.deletedCount} profiles`));
 
-  const userCursor = usersCollection.find();
-  let user = await userCursor.next();
+  const userCursor = await usersCollection.find();
+  // let user = await userCursor.next();
 
-  while (user !== null) {
+  for (const user of userCursor) {
     if (!(await profileCollection.findOne({ email: user.email }))) {
       await profileCollection.insertOne({
         email: user.email,
@@ -25,10 +25,10 @@ import { blue, red } from 'kleur/colors';
       console.log('Skipped', blue(user.email));
     }
 
-    user = await userCursor.next();
+    // user = await userCursor.next();
   }
 
-  await client.close();
+  // await client.close();
 })()
   .then(() => {
     process.exit(0);
