@@ -5,9 +5,9 @@ import GitHubProvider from 'next-auth/providers/github';
 import DiscordProvider from 'next-auth/providers/discord';
 import GoogleProvider from 'next-auth/providers/google';
 
-import { MongoDBAdapter } from '@next-auth/mongodb-adapter';
+import { MongoDBAdapter } from 'nextauth-mongodb-realm';
 
-import { clientPromise } from '~/lib/db/client';
+import { userPromise } from '~/lib/db/client';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -31,7 +31,10 @@ export const authOptions: NextAuthOptions = {
       allowDangerousEmailAccountLinking: true,
     }),
   ],
-  adapter: MongoDBAdapter(clientPromise),
+  adapter: MongoDBAdapter(userPromise, {
+    databaseName: process.env.REALM_DB_NAME,
+    serviceName: process.env.REALM_SERVICE_NAME
+  }),
   callbacks: {
     async signIn({ user }) {
       if (
