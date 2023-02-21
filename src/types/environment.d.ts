@@ -1,8 +1,6 @@
 declare global {
   declare namespace NodeJS {
     interface ProcessEnv {
-      MONGODB_URI: string;
-
       REALM_APP_ID: string;
       REALM_API_KEY: string;
       REALM_SERVICE_NAME: string;
