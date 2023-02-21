@@ -5,7 +5,7 @@ import type { ModList, ModListPartial } from '~/types/moddermore';
 
 export const getUserLists = async (userId: string): Promise<ModList[]> => {
   const collection = await getListsCollection();
-  const lists = await collection.find({ owner: userId }).toArray();
+  const lists = await collection.find({ owner: userId });
 
   return lists.sort((a, b) =>
     new Date(a.created_at) > new Date(b.created_at) ? -1 : 1
@@ -14,7 +14,7 @@ export const getUserLists = async (userId: string): Promise<ModList[]> => {
 
 export const getLegacyUserLists = async (email: string): Promise<ModList[]> => {
   const collection = await getListsCollection();
-  const lists = await collection.find({ legacy: email }).toArray();
+  const lists = await collection.find({ legacy: email });
 
   return lists.sort((a, b) =>
     new Date(a.created_at) > new Date(b.created_at) ? -1 : 1

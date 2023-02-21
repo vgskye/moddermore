@@ -4,7 +4,9 @@ import {
   type MongoClientOptions,
 } from 'mongodb';
 
-import type { ModList } from '~/types/moddermore';
+import * as Realm from "realm-web";
+
+import type { ModListDocument } from '~/types/moddermore';
 
 declare global {
   // eslint-disable-next-line no-var
@@ -15,6 +17,10 @@ const uri = process.env.MONGODB_URI;
 const options: MongoClientOptions = {
   serverApi: ServerApiVersion.v1,
 };
+
+const app = new Realm.App({ id: process.env.REALM_APP_ID });
+const credentials = Realm.Credentials.apiKey(process.env.REALM_API_KEY);
+const userPromise = app.logIn(credentials);
 
 let client: MongoClient;
 let clientPromise: Promise<MongoClient>;
@@ -38,13 +44,17 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 const getListsCollection = async () => {
-  const client = await clientPromise;
-  return client.db().collection<ModList>('lists');
+  // const client = await clientPromise;
+  // return client.db().collection<ModList>('lists');
+  const user = await userPromise;
+  return user.mongoClient(process.env.REALM_SERVICE_NAME).db(process.env.REALM_DB_NAME).collection<ModListDocument>('lists');
 };
 
 const getUsersCollection = async () => {
-  const client = await clientPromise;
-  return client.db().collection('users');
+  // const client = await clientPromise;
+  // return client.db().collection('users');
+  const user = await userPromise;
+  return user.mongoClient(process.env.REALM_SERVICE_NAME).db(process.env.REALM_DB_NAME).collection('users');
 };
 
 export { clientPromise, getListsCollection, getUsersCollection };

@@ -47,6 +47,10 @@ export interface ModList {
   legacy?: string | null;
 }
 
+export interface ModListDocument extends ModList {
+  _id: unknown;
+}
+
 export interface RichModList {
   id: string;
   created_at: string;

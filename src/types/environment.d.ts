@@ -3,6 +3,11 @@ declare global {
     interface ProcessEnv {
       MONGODB_URI: string;
 
+      REALM_APP_ID: string;
+      REALM_API_KEY: string;
+      REALM_SERVICE_NAME: string;
+      REALM_DB_NAME: string;
+
       GITHUB_CLIENT_ID: string;
       GITHUB_CLIENT_SECRET: string;
       DISCORD_CLIENT_ID: string;
