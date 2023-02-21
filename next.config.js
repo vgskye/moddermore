@@ -56,6 +56,7 @@ const securityHeaders = [
 /** @type {import('next').NextConfig} */
 const nextConfig = withPlausibleProxy()(
   withBundleAnalyzer({
+    experimental: { runtime: 'experimental-edge'},
     reactStrictMode: true,
     images: { domains: ['cdn.modrinth.com', 'media.forgecdn.net'] },
 
